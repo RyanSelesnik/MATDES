@@ -1,5 +1,5 @@
 
-# DES Lab
+# MATDES - MATLAB Implementation of the Data Encryption Standard (DES)
 *Ryan Selesnik*
 
 In order to exchange information across a channel securely, the information or plaintext should be encrypted on the sender's end, and decrypted on the receiver's end. DES allows for this. Although there are more secure forms of encryption, DES is still used in some applications today and is one of the most studied block ciphers. This report examines the design, cohesion, and implementation of the DES algorithm. 
