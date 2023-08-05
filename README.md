@@ -1,38 +1,80 @@
+# MATDES: A Comprehensive MATLAB Implementation of the Data Encryption Standard (DES)
 
-# MATDES - MATLAB Implementation of the Data Encryption Standard (DES)
-*Ryan Selesnik*
+The Data Encryption Standard (DES) is a widely studied symmetric-key algorithm for the encryption of electronic data. Despite the emergence of more secure encryption techniques, DES retains its significance and is still utilized in some systems today. This document presents a MATLAB implementation of DES, detailing the design, functionality, and overall structure of the algorithm.
 
-In order to exchange information across a channel securely, the information or plaintext should be encrypted on the sender's end, and decrypted on the receiver's end. DES allows for this. Although there are more secure forms of encryption, DES is still used in some applications today and is one of the most studied block ciphers. This report examines the design, cohesion, and implementation of the DES algorithm. 
+## Sub-key Function: Key Generation for Each Round
 
-## Sub-key Function
-An integral part of the DES algorithm is the sub-key generation. The function takes a 56-bit string `K_pc_1` (derived from the main key), an index, and derives each sub-key `K_i` for a particular round. It also takes in an argument, "operation", which determines whether the function should perform the encryption or decryption key generation. This is discussed in further detail in Section 6.
+An essential aspect of the DES algorithm is the sub-key generation function. This function takes a 56-bit string, `K_pc_1` (derived from the main key), and an index, then creates each sub-key `K_i` for a specific round of encryption or decryption. The argument "operation" is also accepted by this function, determining whether it should perform key generation for encryption or decryption. 
 
-## Calculating the Number of Unique Keys
-To calculate the number of unique sub-keys derived from the main key `K`, an array of sub-keys is populated with all 16 sub-keys. Then, using the built-in function, `unique()`, passing the array of sub-keys to it will return an array of unique sub-keys. 
+The sub-key is given by:
 
-## Round Function
-This function performs each round of encryption. The function takes in a 64-bit block, in the form of a left half and right half, and a 48-bit sub-key, `K_i`.
+$$
+K_i = PC_2(C_0 << n || D_0 << n)
+$$
 
-## The f-function
-The f-function consists of 3 main operations: expansion, S-box substitution, and permutation.
+where `PC_2` is a permutation that maps a 56-bit string to a 48-bit string, `<< n` is a left bitwise rotation, and `n` is defined by:
+
+$$
+n = 
+\begin{cases}
+  1, & \text{if } i = 1, 2, 9, 16 \\
+  2, & \text{else}
+\end{cases}
+$$
+
+where `i` belongs to the set {1, ..., 16}. This is achieved in MATLAB using a for-loop to shift each half.
+
+## Counting Unique Keys: Ensuring Key Diversity
+
+The diversity of the keys used in the DES algorithm can be calculated by assessing the number of unique sub-keys derived from the main key, `K`. To do this, we populate an array with all 16 sub-keys, and then use the built-in MATLAB function `unique()`, which returns an array of unique sub-keys when passed our array.
+
+## Round Function: Encrypting in Stages
+
+The round function is the workhorse of each encryption cycle. This function accepts a 64-bit block, divided into a left half and right half, and a 48-bit sub-key, `K_i`. It performs a series of operations to transform the input block.
+
+## The f-function: A Three-Step Transformation
+
+The f-function is a composite function that performs three primary operations: expansion, S-box substitution, and permutation. These steps contribute to the overall security of the DES encryption process.
+
+### Expansion
+
+The expansion function `E` maps 32 bits to 48 bits. The expansion table is defined in MATLAB as an array and uses the logic given by Algorithm 1. This component provides diffusion.
+
+### S-box Substitution
+
+The S-box substitution is one of the main components that gives DES its security, as it provides confusion. The output of each S-box is determined by the 6-bit "selection bits" where the row is given by bits 1 and 6, and the column is given by bits 2-5. The row and columns are then converted to decimal using the `bin2dec()` function. In reality, the row and columns are incremented by 1 to account for MATLAB's matrix indexing convention.
+
+### Permutation
+
+This permutation uses Algorithm 1 and maps a 32-bit string to a 32-bit string.
 
 ## Implementing the DES Algorithm
-Now, using the sub-key generation function and the round function, the DES algorithm can be implemented. All that's left to add is an initial permutation `IP`, an initial key permutation `PC_1`, and a final permutation `IP^-1`.
 
-## Decryption
-A major advantage of DES is that the encryption and decryption are essentially the same operation. In fact, the decryption algorithm uses the exact same functions mentioned above. Instead, the encrypted text is the input rather than the plaintext. 
+Now, using the sub-key generation function and the round function, we can implement the DES algorithm. The only remaining steps are to apply the initial permutation `IP`, the initial key permutation `PC_1`, and the final permutation `IP^-1`. 
 
-## Results
-The results were tested using a DES website. The sub-key function is tested; however, the results are not presented here since if the main DES function works, it implies that the sub-key generation also works.
+The logic for DES is given by:
 
-## Discussion
-The design of the DES code was based around binary strings. Since the input is given in hexadecimal, it needs to be converted to binary using Matlab's built-in functions. 
+```markdown
+Algorithm DES (plainText, key, operation)
+plainText <- hexToBin(plainText)
+key <- PC_1(key)
+[leftHalf, rightHalf] <- IP(plainText)
+for i <- 1 to 16 do
+  [leftHalf, rightHalf] <- round(leftHalf, rightHalf, K_i)
+end
+cipher <- rightHalf || leftHalf
+cipher <- IP^-1(cipher)
+cipher <- binToHex(cipher)
+```
 
-## Conclusion
-Ultimately, the design of the DES algorithm and required calculations, such as the number of unique keys, were discussed, and the implementation in Matlab, was successful.
+## Decryption: Reverse Engineering the Encrypted Text
 
-## References
-1. C. Paar and J. Pelzl. Understanding cryptography: a textbook for students and practitioners. Springer Science & Business Media, 2009.
-2. L. Cheng. "Modern Symmetric Ciphers." [Link](http://dept.ee.wits.ac.za/~cheng/ELEN3015/Files/DES.pdf). Accessed: 2021-04-30.
-3. "Can you explain 'weak keys' for DES?" [Link](https://crypto.stackexchange.com/questions/12214/can-you-explain-weak-keys-for-des). Accessed: 2021-04-30.
-4. A. J. Menezes, P. C. Van Oorschot, and S. A. Vanstone. Handbook of applied cryptography. CRC press, 2018.
+One of the significant advantages of DES is that encryption and decryption are mirror processes. The decryption algorithm uses the same functions as mentioned above. However, instead of plaintext, the input is now the encrypted text. Thus, DES provides a symmetric encryption and decryption process.
+
+The decryption operation redefines the sub-key generation as:
+
+$$
+K_i = PC_2(C_0 >> n || D_0 >> n)
+$$
+
+where `PC_2` stays the same, `>> n` is a right bitwise rotation, and `n` is defined by the same conditions as for encryption. This essentially reverses the order of the key generation, i.e., `(K_16, ..., K_1)`.
