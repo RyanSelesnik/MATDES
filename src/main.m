@@ -1,8 +1,6 @@
 
 %% DES demonstration script
 
-% This script demonstrates the working of tasks 1 to 5
-
 % Usage:
 % Use the "Run Section" or "Run and "Advance" command
 
