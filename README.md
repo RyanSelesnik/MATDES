@@ -1,5 +1,7 @@
 # MATDES: A Comprehensive MATLAB Implementation of the Data Encryption Standard (DES)
 
+![DALL·E 2023-08-05 14 56 17 - An abstract artwork inspired by the DES encryption algorithm, featuring cryptographic symbols and binary code](https://github.com/RyanSelesnik/MATDES/assets/68182750/bf305b1d-0f4f-4bd6-aa8b-0b9221d51ea6)
+
 The Data Encryption Standard (DES) is a widely studied symmetric-key algorithm for the encryption of electronic data. Despite the emergence of more secure encryption techniques, DES retains its significance and is still utilized in some systems today. This document presents a MATLAB implementation of DES, detailing the design, functionality, and overall structure of the algorithm.
 
 ## Sub-key Function: Key Generation for Each Round
