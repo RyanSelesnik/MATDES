@@ -1,8 +1,20 @@
 # MATDES: A Comprehensive MATLAB Implementation of the Data Encryption Standard (DES)
 
-![DALL·E 2023-08-05 14 56 17 - An abstract artwork inspired by the DES encryption algorithm, featuring cryptographic symbols and binary code](https://github.com/RyanSelesnik/MATDES/assets/68182750/bf305b1d-0f4f-4bd6-aa8b-0b9221d51ea6)
+<img src="https://github.com/RyanSelesnik/MATDES/assets/68182750/bf305b1d-0f4f-4bd6-aa8b-0b9221d51ea6" alt="DALL·E 2023-08-05 14 56 17 - An abstract artwork inspired by the DES encryption algorithm, featuring cryptographic symbols and binary code" width="400" height="400"/>
 
-The Data Encryption Standard (DES) is a widely studied symmetric-key algorithm for the encryption of electronic data. Despite the emergence of more secure encryption techniques, DES retains its significance and is still utilized in some systems today. This document presents a MATLAB implementation of DES, detailing the design, functionality, and overall structure of the algorithm.
+The Data Encryption Standard (DES) is a symmetric-key encryption algorithm that has been a cornerstone of electronic data security since its standardization in 1977. It relies on a 64-bit block cipher with a 56-bit key.
+
+DES operates through 16 rounds of complex transformations, which include permutation and substitution methods. These multiple rounds add to the complexity and strength of the encryption. The process consists of the following primary components:
+
+1. **Initial Permutation (IP):** The data block is initially reordered.
+2. **Round Function:** The core encryption process, repeated 16 times, involving key mixing, substitution, and permutation.
+3. **Final Permutation (IP\(^{-1}\)):** The reverse of the initial permutation.
+
+Below is a high-level overview of the DES process:
+
+![DES Overview](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png)
+
+This document presents a MATLAB implementation of DES, detailing the design, functionality, and overall structure of the algorithm.
 
 ## Sub-key Function: Key Generation for Each Round
 
